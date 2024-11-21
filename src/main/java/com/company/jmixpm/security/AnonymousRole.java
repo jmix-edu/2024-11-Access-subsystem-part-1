@@ -1,5 +1,6 @@
 package com.company.jmixpm.security;
 
+import com.company.jmixpm.entity.Project;
 import com.company.jmixpm.entity.Task;
 import com.company.jmixpm.entity.User;
 import com.company.jmixpm.entity.dashboard.DashboardProject;
@@ -19,14 +20,16 @@ public interface AnonymousRole {
     @ViewPolicy(viewIds = {"Task_.list", "ProjectsDashboardView"})
     void screens();
 
-    @EntityAttributePolicy(entityClass = Task.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
-    @EntityPolicy(entityClass = Task.class, actions = EntityPolicyAction.READ)
-    void task();
-
     @EntityPolicy(entityClass = User.class, actions = EntityPolicyAction.READ)
     void user();
 
-    @EntityAttributePolicy(entityClass = DashboardProject.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
-    @EntityPolicy(entityClass = DashboardProject.class, actions = EntityPolicyAction.ALL)
+    @EntityPolicy(entityClass = Task.class, actions = EntityPolicyAction.READ)
+    @EntityAttributePolicy(entityClass = Task.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
+    void task();
+
+    @EntityAttributePolicy(entityClass = DashboardProject.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
     void dashboardProject();
+
+    @EntityAttributePolicy(entityClass = Project.class, attributes = "*", action = EntityAttributePolicyAction.VIEW)
+    void project();
 }

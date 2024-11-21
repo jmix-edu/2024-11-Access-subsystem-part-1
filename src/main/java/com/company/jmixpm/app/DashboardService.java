@@ -3,8 +3,8 @@ package com.company.jmixpm.app;
 import com.company.jmixpm.entity.Project;
 import com.company.jmixpm.entity.Task;
 import com.company.jmixpm.entity.dashboard.DashboardProject;
-import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
+import io.jmix.core.UnconstrainedDataManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 @Service
 public class DashboardService {
 
-    private final DataManager dataManager;
+    private final UnconstrainedDataManager unconstrainedDataManager;
 
-    public DashboardService(DataManager dataManager) {
-        this.dataManager = dataManager;
+    public DashboardService(UnconstrainedDataManager dataManager) {
+        this.unconstrainedDataManager = dataManager;
     }
 
     public List<DashboardProject> fetchProjects() {
-        List<Project> projects = dataManager.load(Project.class)
+        List<Project> projects = unconstrainedDataManager.load(Project.class)
                 .all()
                 .fetchPlan(builder -> builder.addFetchPlan(FetchPlan.BASE)
                         .add("manager", FetchPlan.BASE)
@@ -32,7 +32,7 @@ public class DashboardService {
 
         List<DashboardProject> dProjects = projects.stream()
                 .map(project -> {
-                    DashboardProject dProject = dataManager.create(DashboardProject.class);
+                    DashboardProject dProject = unconstrainedDataManager.create(DashboardProject.class);
                     dProject.setId(project.getId());
                     dProject.setName(project.getName());
                     dProject.setManagerUsername(project.getManager().getUsername());
@@ -58,7 +58,7 @@ public class DashboardService {
     }
 
     private Integer getActualEfforts(UUID projectId) {
-        return dataManager.loadValue("select sum(te.timeSpent) from TimeEntry te " +
+        return unconstrainedDataManager.loadValue("select sum(te.timeSpent) from TimeEntry te " +
                         "where te.task.project.id = :projectId", Integer.class)
                 .parameter("projectId", projectId)
                 .optional().orElse(0);
