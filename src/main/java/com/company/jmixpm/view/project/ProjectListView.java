@@ -4,6 +4,7 @@ import com.company.jmixpm.entity.Project;
 import com.company.jmixpm.security.specific.ProjectArchiveContext;
 import com.company.jmixpm.view.main.MainView;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import io.jmix.core.AccessManager;
 import io.jmix.core.DataManager;
 import io.jmix.flowui.Notifications;
@@ -13,6 +14,7 @@ import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@AnonymousAllowed
 @Route(value = "projects", layout = MainView.class)
 @ViewController("Project.list")
 @ViewDescriptor("project-list-view.xml")

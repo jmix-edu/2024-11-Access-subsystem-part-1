@@ -5,6 +5,7 @@ import com.company.jmixpm.entity.Project;
 import com.company.jmixpm.entity.User;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.core.usersubstitution.CurrentUserSubstitution;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,10 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProjectDetailView extends StandardDetailView<Project> {
     @Autowired
     private CurrentAuthentication currentAuthentication;
+    @Autowired
+    private CurrentUserSubstitution currentUserSubstitution;
 
     @Subscribe
     public void onInitEntity(InitEntityEvent<Project> event) {
-        User user = (User) currentAuthentication.getUser();
+        User user = (User) currentUserSubstitution.getEffectiveUser();
+//        User user = (User) currentAuthentication.getUser();
 
         event.getEntity().setManager(user);
     }

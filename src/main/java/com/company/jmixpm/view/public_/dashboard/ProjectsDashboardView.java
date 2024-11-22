@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AnonymousAllowed
 @Route(value = "projects-dashboard")
 @ViewController("ProjectsDashboardView")
 @ViewDescriptor("projects-dashboard.xml")

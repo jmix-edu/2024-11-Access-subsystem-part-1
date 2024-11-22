@@ -8,9 +8,15 @@ import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.security.authentication.JmixUserDetails;
-import org.springframework.security.core.GrantedAuthority;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -23,7 +29,7 @@ import java.util.UUID;
 public class User implements JmixUserDetails, HasTimeZone {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false)
     @JmixGeneratedValue
     private UUID id;
 
@@ -55,8 +61,66 @@ public class User implements JmixUserDetails, HasTimeZone {
     @Column(name = "TIME_ZONE_ID")
     private String timeZoneId;
 
+    @Column(name = "ACTIVATION_TOKEN")
+    private String activationToken;
+
+    @Column(name = "NEEDS_ACTIVATION", nullable = false)
+    @NotNull
+    private Boolean needsActivation = false;
+
+    @CreatedBy
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
+    @CreatedDate
+    @Column(name = "CREATED_DATE")
+    private OffsetDateTime createdDate;
+
+    @Column(name = "EXPIRY_DATE")
+    private LocalDate expiryDate;
+
     @Transient
     private Collection<? extends GrantedAuthority> authorities;
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public OffsetDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(OffsetDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Boolean getNeedsActivation() {
+        return needsActivation;
+    }
+
+    public void setNeedsActivation(Boolean needsActivation) {
+        this.needsActivation = needsActivation;
+    }
+
+    public String getActivationToken() {
+        return activationToken;
+    }
+
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
+    }
 
     public UUID getId() {
         return id;
@@ -135,7 +199,8 @@ public class User implements JmixUserDetails, HasTimeZone {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        LocalDate now = LocalDate.now();
+        return expiryDate == null || !now.isAfter(expiryDate);
     }
 
     @Override
