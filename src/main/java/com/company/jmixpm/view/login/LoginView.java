@@ -109,7 +109,7 @@ public class LoginView extends StandardView implements LocaleChangeObserver {
 
             if (e instanceof AccountExpiredException) {
                 JmixLoginI18n loginI18n = createLoginI18n();
-                loginI18n.getErrorMessage().setMessage(e.getMessage());
+                loginI18n.getErrorMessage().setMessage(messageBundle.getMessage("loginForm.accountExpired"));
                 login.setI18n(loginI18n);
             } else {
                 login.setI18n(createLoginI18n());

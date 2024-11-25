@@ -124,6 +124,7 @@ public class RegistrationService {
         assignment1.setUsername(user.getUsername());
         assignment1.setRoleType(RoleAssignmentRoleType.RESOURCE);
         assignment1.setRoleCode(DeveloperRole.CODE);
+//        assignment1.setRoleCode("database-role-code");
 
         RoleAssignmentEntity assignment2 = unconstrainedDataManager.create(RoleAssignmentEntity.class);
         assignment2.setUsername(user.getUsername());
